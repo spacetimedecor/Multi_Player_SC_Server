@@ -1,3 +1,5 @@
+import User from './users/user';
+
 export type messagePayloadTypes =
   | ServerGreetingPayload
   | ClientGreetingPayload
@@ -23,7 +25,10 @@ export type NewUserJoinedPayload = {
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type ServerStatusPayload = {};
+export type ServerStatusPayload = {
+  toClientID: string;
+  currentUsers: Map<string, User>;
+};
 
 export type ClientStatusPayload = { id: string };
 
@@ -33,6 +38,17 @@ export type ServerGreetingPayload = {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type ClientGreetingPayload = { id: string | null };
+
+function mapReplacer(key, value) {
+  if (value instanceof Map) {
+    return {
+      dataType: 'Map',
+      value: Array.from(value.entries()), // or with spread: value: [...value]
+    };
+  } else {
+    return value;
+  }
+}
 
 export function newMessage(
   type: MESSAGES,
@@ -44,21 +60,22 @@ export function newMessage(
       typedPayload = payload as NewUserJoinedPayload;
       return JSON.stringify({
         type: MESSAGES.NEW_USER_JOINED,
-        payload: { id: typedPayload.id } as NewUserJoinedPayload,
+        payload: typedPayload,
       } as message);
     case MESSAGES.SERVER_STATUS:
       typedPayload = payload as ServerStatusPayload;
-      return JSON.stringify({
-        type: MESSAGES.SERVER_STATUS,
-        payload: { id: typedPayload.id } as ServerStatusPayload,
-      } as message);
+      return JSON.stringify(
+        {
+          type: MESSAGES.SERVER_STATUS,
+          payload: typedPayload,
+        } as message,
+        mapReplacer
+      );
     case MESSAGES.SERVER_GREETING:
       typedPayload = payload as ServerGreetingPayload;
       return JSON.stringify({
         type: MESSAGES.SERVER_GREETING,
-        payload: {
-          id: typedPayload.id,
-        } as ServerGreetingPayload,
+        payload: typedPayload,
       } as message);
     default:
       return '';

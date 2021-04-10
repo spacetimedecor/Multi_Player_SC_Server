@@ -65,6 +65,11 @@ export const newUserJoined = (id: string): void => {
 
 export const statusUpdate = (): void => {
   tell(WhoAreWeTelling.EVERYONE, (user: User) =>
-    user.send(newMessage(MESSAGES.SERVER_STATUS, { id: user.id }))
+    user.send(
+      newMessage(MESSAGES.SERVER_STATUS, {
+        toClientID: user.id,
+        currentUsers: current,
+      })
+    )
   );
 };
