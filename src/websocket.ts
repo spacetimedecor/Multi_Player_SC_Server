@@ -3,6 +3,7 @@ import User from './users/user';
 import { addUser, current, userReturned, userExists } from './users';
 import * as http from 'http';
 import { URL, URLSearchParams } from 'url';
+import { newUserJoined } from './events';
 
 const websocket: Server = new Server({ port: 8081 });
 
@@ -19,5 +20,6 @@ const onConnection = (ws: WebSocket, req: http.IncomingMessage) => {
   } else {
     addUser({ socket: ws, id });
   }
+  newUserJoined(id);
   console.log(current);
 };

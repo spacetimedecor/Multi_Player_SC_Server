@@ -4,7 +4,6 @@ import {
   message,
   MESSAGES,
 } from './messages';
-import { newUserJoined } from './events';
 
 export const onMessage = (aMessage: string): void => {
   const interpretMessage: message = JSON.parse(aMessage);
@@ -23,7 +22,6 @@ export const onMessage = (aMessage: string): void => {
 
 export const onClientGreeting = (payload: ClientGreetingPayload): void => {
   console.log(MESSAGES.CLIENT_GREETING, payload.id);
-  newUserJoined(payload.id);
 };
 
 export const onClientStatus = (payload: ClientStatusPayload): void => {
