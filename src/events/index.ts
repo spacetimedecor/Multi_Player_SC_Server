@@ -1,4 +1,4 @@
-import { current } from '../users';
+import { current, currentUsersList } from '../users';
 import User from '../users/user';
 import { MESSAGES, newMessage } from '../messages';
 
@@ -68,7 +68,7 @@ export const statusUpdate = (): void => {
     user.send(
       newMessage(MESSAGES.SERVER_STATUS, {
         toClientID: user.id,
-        currentUsers: current,
+        currentUsers: currentUsersList(),
       })
     )
   );

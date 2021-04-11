@@ -4,6 +4,9 @@ import WebSocket from 'ws';
 
 export const current = new Map<string, User>();
 
+export const currentUsersList = (): string[] =>
+  Array.from(current).map(([id]) => id);
+
 export const addUser = (options: userOptions): void => {
   const thisUser = new User(options);
   thisUser.send(newMessage(MESSAGES.SERVER_GREETING, { id: thisUser.id }));
